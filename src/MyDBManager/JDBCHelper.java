@@ -6,7 +6,6 @@ import javafx.util.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,10 +37,10 @@ public class JDBCHelper {
         StringBuilder fieldsValue = new StringBuilder();
 
         for (Method method : object.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(DBField.class)) {
-                DBField dbField = method.getAnnotation(DBField.class);
-                if (dbField.methodType() == ModelMethodType.GETTER && dbField.isIdentity() == false) {
-                    fieldsName.append(dbField.dbFieldName()).append(",");
+            if (method.isAnnotationPresent(Column.class)) {
+                Column column = method.getAnnotation(Column.class);
+                if (column.methodType() == ModelMethodType.GETTER && column.isIdentity() == false) {
+                    fieldsName.append(column.dbFieldName()).append(",");
                     fieldsValue.append("\"").append(method.invoke(object).toString()).append("\"").append(",");
                 }
             }
@@ -56,11 +55,11 @@ public class JDBCHelper {
 
     private static String getInsertQuery(Object object) throws InvocationTargetException, IllegalAccessException {
         StringBuilder stringBuilder = new StringBuilder();
-        if (object.getClass().isAnnotationPresent(DBTable.class)) {
+        if (object.getClass().isAnnotationPresent(Table.class)) {
             Pair<String, String> fields = getFields4Insert(object);
 
-            DBTable dbTable = object.getClass().getDeclaredAnnotation(DBTable.class);
-            stringBuilder.append("insert into ").append(dbTable.dbTableName());
+            Table table = object.getClass().getDeclaredAnnotation(Table.class);
+            stringBuilder.append("insert into ").append(table.dbTableName());
             stringBuilder.append("(").append(fields.getKey()).append(")");
             stringBuilder.append("values").append("(").append(fields.getValue());
             stringBuilder.append(")");
@@ -88,8 +87,8 @@ public class JDBCHelper {
 
         Object resultObject = null;
         try {
-            if (object.getClass().isAnnotationPresent(DBTable.class)) {
-                String tableName = object.getClass().getAnnotation(DBTable.class).dbTableName();
+            if (object.getClass().isAnnotationPresent(Table.class)) {
+                String tableName = object.getClass().getAnnotation(Table.class).dbTableName();
                 StringBuilder query = new StringBuilder();
 
                 query.append("select * from ").append(tableName).append(" where ").append(criteria);
@@ -123,8 +122,8 @@ public class JDBCHelper {
 
         List<Object> resultObjectList = new ArrayList<>();
         try {
-            if (object.getClass().isAnnotationPresent(DBTable.class)) {
-                String tableName = object.getClass().getAnnotation(DBTable.class).dbTableName();
+            if (object.getClass().isAnnotationPresent(Table.class)) {
+                String tableName = object.getClass().getAnnotation(Table.class).dbTableName();
                 StringBuilder query = new StringBuilder();
 
                 query.append("select * from ").append(tableName).append(" where ").append(criteria);
@@ -151,8 +150,8 @@ public class JDBCHelper {
     public static void delete(Object object, String criteria) throws RuntimeException {
 
         try {
-            if (object.getClass().isAnnotationPresent(DBTable.class)) {
-                String tableName = object.getClass().getAnnotation(DBTable.class).dbTableName();
+            if (object.getClass().isAnnotationPresent(Table.class)) {
+                String tableName = object.getClass().getAnnotation(Table.class).dbTableName();
                 StringBuilder query = new StringBuilder();
 
                 query.append("delete from ").append(tableName).append(" where ").append(criteria);

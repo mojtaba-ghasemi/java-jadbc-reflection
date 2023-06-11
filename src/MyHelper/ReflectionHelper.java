@@ -1,6 +1,6 @@
 package MyHelper;
 
-import MyDBManager.DBField;
+import MyDBManager.Column;
 import MyDBManager.ModelMethodType;
 
 import java.lang.reflect.Field;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class ReflectionHelper {
 
-    private static Object getFiledValue(Object dbValue, DBField field) {
+    private static Object getFiledValue(Object dbValue, Column field) {
         Object resultValue;
         switch (field.dataType()) {
             case "UUID":
@@ -38,10 +38,10 @@ public class ReflectionHelper {
         Object resultObject = copyObject(object);
 
         for (Method method : object.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(DBField.class)) {
-                DBField dbField = method.getAnnotation(DBField.class);
-                if (dbField.methodType() == ModelMethodType.SETTER) {
-                    method.invoke(resultObject, getFiledValue(resultSet.getObject(dbField.dbFieldName()), dbField));
+            if (method.isAnnotationPresent(Column.class)) {
+                Column column = method.getAnnotation(Column.class);
+                if (column.methodType() == ModelMethodType.SETTER) {
+                    method.invoke(resultObject, getFiledValue(resultSet.getObject(column.dbFieldName()), column));
                 }
             }
         }

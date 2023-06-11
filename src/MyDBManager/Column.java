@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface DBField {
+public @interface Column {
 
     ModelMethodType methodType() default ModelMethodType.SETTER;
 
