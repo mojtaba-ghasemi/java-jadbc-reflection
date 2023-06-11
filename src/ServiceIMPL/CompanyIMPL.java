@@ -32,7 +32,7 @@ public class CompanyIMPL implements DBPrimaryServices<Company> {
     @Override
     public Company insert(Company object) throws RuntimeException {
         JDBCHelper.insert(object);
-        object = getObject(object.getCompanyGUID().toString());
+        object = getObject(object.getCompanyGUID());
         return object;
     }
 

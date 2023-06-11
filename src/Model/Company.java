@@ -60,17 +60,10 @@ public class Company implements Cloneable{
         this.startActivityDate = startActivityDate;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
 
     String name;
     LocalDate startActivityDate;
 
-    List<Employee> employees;
 
 }
